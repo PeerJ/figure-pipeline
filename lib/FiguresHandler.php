@@ -122,7 +122,7 @@ class FiguresHandler  {
     );
   }
 
-  public function generate_xmp($node) {
+  protected function generate_xmp($node) {
     $doc = new DOMDocument;
     $doc->appendChild($doc->importNode($node, true));
 
@@ -132,7 +132,7 @@ class FiguresHandler  {
     return $xmp;
   }
 
-  public function figure_metadata($xmp, $articleId, $figureId) {
+  protected function figure_metadata($xmp, $articleId, $figureId) {
     $xpath = new DOMXPath($xmp);
     $xpath->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
     $identifier = $xpath->evaluate('string(.//dc:identifier)');
@@ -154,7 +154,7 @@ class FiguresHandler  {
     );
   }
 
-  public function fetch_figure($figure, $dir) {
+  protected function fetch_figure($figure, $dir) {
     $path = $dir . '/' . preg_replace('/[^\w-\.]/', '', $figure['filename']);
 
     if (!file_exists($path)) {
@@ -167,7 +167,7 @@ class FiguresHandler  {
     return $path;
   }
 
-  public function upload_figure($path, $xmpfile) {
+  protected function upload_figure($path, $xmpfile) {
     print "Writing XMP from $xmpfile\n";
 
     /*$command = sprintf('exiftool -overwrite_original -tagsfromfile %s -xmp %s',
