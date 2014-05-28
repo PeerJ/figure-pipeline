@@ -78,7 +78,7 @@ class FiguresHandler  {
       $figureId = $figureNode->getAttribute('id');
 
       $xmp = $this->generate_xmp($figureNode);
-      $figure = $this->figure_metadata($xmp, $article['article-id'], $figureId);
+      $figure = $this->figure_metadata($xmp, $article, $figureId);
       $path = $this->fetch_figure($figure, $dir);
 
       $xmpfile = preg_replace('/.png$/', '.xmp', $path);
@@ -132,16 +132,17 @@ class FiguresHandler  {
     return $xmp;
   }
 
-  protected function figure_metadata($xmp, $articleId, $figureId) {
+  protected function figure_metadata($xmp, $article, $figureId) {
     $xpath = new DOMXPath($xmp);
     $xpath->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
     $identifier = $xpath->evaluate('string(.//dc:identifier)');
 
     $doi = preg_replace('/^doi:/', '', $identifier);
-    $articleId = preg_replace('/[^\d]/', '', $articleId);
+    $articleId = preg_replace('/[^\d]/', '', $article['article-id']);
     $figureId = preg_replace('/[^\w-]/', '', $figureId);
+    $journal = preg_replace('/[^\w-]/', '-', strtolower($article['journal-title']));
 
-    $filename = sprintf('peerj-%d-%s.png', $articleId, $figureId);
+    $filename = sprintf('%s-%d-%s.png', $journal, $articleId, $figureId);
 
     // TMP; TODO: content negotation for the image
     //$url = 'http://dx.doi.org/' + $doi;
