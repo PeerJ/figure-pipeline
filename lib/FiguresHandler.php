@@ -137,21 +137,15 @@ class FiguresHandler  {
     $xpath->registerNamespace('dc', 'http://purl.org/dc/elements/1.1/');
     $identifier = $xpath->evaluate('string(.//dc:identifier)');
 
-    $doi = preg_replace('/^doi:/', '', $identifier);
-    $articleId = preg_replace('/[^\d]/', '', $article['article-id']);
-    $figureId = preg_replace('/[^\w-]/', '', $figureId);
     $journal = preg_replace('/[^\w-]/', '-', strtolower($article['journal-title']));
-
-    $filename = sprintf('%s-%d-%s.png', $journal, $articleId, $figureId);
 
     // TMP; TODO: content negotation for the image
     //$url = 'http://dx.doi.org/' + $doi;
-    $url = sprintf('https://peerj.com/articles/%d/%s-full.png', $articleId, $figureId);
 
     return array(
-      'url' => $url,
-      'doi' => $doi,
-      'filename' => $filename,
+      'url' => sprintf('https://peerj.com/articles/%d/%s-full.png', $article['article-id'], $figureId),
+      'doi' => preg_replace('/^doi:/', '', $identifier),
+      'filename' => sprintf('%s-%d-%s.png', $journal, $article['article-id'], $figureId),
     );
   }
 
